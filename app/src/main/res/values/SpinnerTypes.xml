@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="bikeTypes">
+        <item>Road Bike</item>
+        <item>Cross Bike</item>
+        <item>Mountain Bikes</item>
+        <item>Mini Velo</item>
+        <item>City Cycle</item>
+        <item>Electric</item>
+    </string-array>
+</resources>
