@@ -1,6 +1,19 @@
 package com.example.and1.model;
 
-public class Order {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Order implements Parcelable {
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator(){
+        public Order createFromParcel(Parcel in){
+            return new Order(in);
+        }
+
+        public Order[] newArray(int size){
+            return new Order[size];
+        }
+    };
     private String userId;
     private String bikeId;
     private String period;
@@ -11,6 +24,12 @@ public class Order {
         this.bikeId = bikeId;
         this.period = period;
         this.totalPrice = totalPrice;
+    }
+
+    public Order(Parcel in) {
+            this.bikeId = in.readString();
+            this.period = in.readString();
+            this.totalPrice = in.readDouble();
     }
 
 
@@ -54,5 +73,15 @@ public class Order {
                 ", period='" + period + '\'' +
                 ", totalPrice=" + totalPrice +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

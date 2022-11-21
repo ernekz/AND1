@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.and1.Fragments.AddFragment;
+import com.example.and1.Fragments.HistoryFragment;
 import com.example.and1.Fragments.HomeFragment;
 import com.example.and1.Fragments.ProfileFragment;
 import com.example.and1.R;
@@ -46,6 +47,8 @@ public class HomeActivity extends AppCompatActivity {
                         case R.id.nav_profile:
                             selectedFragment = new ProfileFragment();
                             break;
+                        case R.id.nav_history:
+                            selectedFragment = new HistoryFragment();
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             selectedFragment).commit();
