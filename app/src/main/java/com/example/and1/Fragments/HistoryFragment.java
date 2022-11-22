@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.and1.R;
 import com.example.and1.model.Bike;
 import com.example.and1.model.Order;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,9 +31,10 @@ import java.util.ArrayList;
 public class HistoryFragment extends Fragment {
     Context context;
     DatabaseReference databaseReference;
-    ArrayList<Bike> arrayList = new ArrayList<>();
+    private FirebaseAuth mAuth;
+    ArrayList<Order> arrayList = new ArrayList<>();
 
-    RecyclerViewAdapter rcAdapter;
+    RecycleViewAdapterHistory rcAdapter;
     RecyclerView recyclerView;
 
     private FragmentActivity myContext;
@@ -42,7 +44,7 @@ public class HistoryFragment extends Fragment {
         public void onClick(View v) {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) v.getTag();
             int position = viewHolder.getAdapterPosition();
-            Bike thisItem = arrayList.get(position);
+            Order thisItem = arrayList.get(position);
             Bundle bundle = new Bundle();
             bundle.putParcelable("Object", thisItem);
             Fragment selectedFragment = new ListItemDetail();
@@ -58,11 +60,13 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        databaseReference = FirebaseDatabase.getInstance().getReference("Orders");
+        mAuth = FirebaseAuth.getInstance();
+        String key = mAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Orders").child(key);
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Bike value = dataSnapshot.getValue(Bike.class);
+                Order value = dataSnapshot.getValue(Order.class);
                 arrayList.add(value);
                 rcAdapter.notifyDataSetChanged();
             }
@@ -97,10 +101,10 @@ public class HistoryFragment extends Fragment {
         context = rootView.getContext();
 
         recyclerView = rootView.findViewById(R.id.history_recylerView);
-        rcAdapter = new RecyclerViewAdapter(rootView.getContext(),arrayList);
+        rcAdapter = new RecycleViewAdapterHistory(rootView.getContext(),arrayList);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(rcAdapter);
-        rcAdapter.setOnItemClickListener(onItemClickListener);
+        //rcAdapter.setOnItemClickListener(onItemClickListener);
 
         return rootView;
 

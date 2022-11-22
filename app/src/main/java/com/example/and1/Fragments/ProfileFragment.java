@@ -3,6 +3,7 @@ package com.example.and1.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class ProfileFragment extends Fragment {
 
     Button btnLogout, btnBalance;
@@ -48,7 +51,7 @@ public class ProfileFragment extends Fragment {
 
         btnLogout = rootView.findViewById(R.id.loggout);
 
-       // btnBalance = rootView.findViewById(R.id.balance);
+       //btnBalance = rootView.findViewById(R.id.balance);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +77,8 @@ public class ProfileFragment extends Fragment {
         mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String currentBal = (String) dataSnapshot.getValue().toString();
-                currentBalance.setText(currentBal);
+                //String currentBal = (String) dataSnapshot.getValue().toString();
+                //currentBalance.setText(currentBal);
 
             }
 
@@ -90,13 +93,17 @@ public class ProfileFragment extends Fragment {
                 mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String currentBal = (String) dataSnapshot.getValue().toString();
+
+                        Object currentBal = dataSnapshot.getValue();
+
+
                         double ba = Double.parseDouble(balance.getText().toString());
-                        double add = Double.parseDouble(currentBal);
+                        double add = Double.parseDouble(currentBal.toString());
                         double newValue = ba + add;
                         mDatabaseReference.setValue(newValue);
                         balanceSet();
                         Toast.makeText(rootView.getContext(), "You top-up you balance: " + ba + " dkk", Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override
@@ -126,8 +133,9 @@ public class ProfileFragment extends Fragment {
         mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String currentBal = (String) dataSnapshot.getValue().toString();
-                currentBalance.setText(currentBal);
+                Object currentBal = dataSnapshot.getValue();
+
+                currentBalance.setText(currentBal.toString());
 
             }
 

@@ -32,6 +32,11 @@ public class Order implements Parcelable {
             this.totalPrice = in.readDouble();
     }
 
+    public Order(){
+
+
+    }
+
 
     public String getUserId() {
         return userId;

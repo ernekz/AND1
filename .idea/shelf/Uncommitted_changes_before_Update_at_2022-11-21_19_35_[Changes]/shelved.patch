@@ -1,0 +1,273 @@
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.application'\n\nandroid {\n    compileSdkVersion 29\n    buildToolsVersion \"29.0.2\"\n    defaultConfig {\n        applicationId \"com.example.and1\"\n        minSdkVersion 16\n        targetSdkVersion 29\n        versionCode 1\n        versionName \"1.0\"\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\n    }\n    buildTypes {\n        release {\n            minifyEnabled false\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\n        }\n    }\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_1_8\n        targetCompatibility JavaVersion.VERSION_1_8\n    }\n}\n\ndependencies {\n    implementation fileTree(dir: 'libs', include: ['*.jar'])\n    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'\n    implementation 'com.google.firebase:firebase-analytics:17.2.2'\n    implementation 'com.google.firebase:firebase-auth:19.2.0'\n    implementation 'androidx.legacy:legacy-support-v4:1.0.0'\n    testImplementation 'junit:junit:4.12'\n    androidTestImplementation 'androidx.test.ext:junit:1.1.1'\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'\n    implementation 'com.squareup.retrofit2:retrofit:2.4.0'\n    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'\n    implementation 'io.reactivex.rxjava2:rxjava:2.1.13'\n    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'\n    implementation 'com.journeyapps:zxing-android-embedded:3.0.2@aar'\n    implementation 'androidx.appcompat:appcompat:1.1.0'\n    implementation 'me.dm7.barcodescanner:zxing:1.9.8'\n    implementation 'com.google.zxing:core:3.3.0'\n    implementation 'com.google.android.material:material:1.2.0-alpha04'\n    implementation 'com.google.firebase:firebase-database:19.2.0'\n    implementation 'com.jakewharton:butterknife:10.0.0'\n    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'\n    implementation 'com.google.firebase:firebase-storage:19.1.1'\n    implementation 'com.squareup.picasso:picasso:2.5.2'\n\n\n}\n\napply plugin: 'com.google.gms.google-services'\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision f04796c1cea9ac953c4a0609bba344fe5bffe782)
++++ b/app/build.gradle	(date 1668714960941)
+@@ -5,11 +5,13 @@
+     buildToolsVersion "29.0.2"
+     defaultConfig {
+         applicationId "com.example.and1"
+-        minSdkVersion 16
++        minSdkVersion 19
++        //noinspection ExpiredTargetSdkVersion
+         targetSdkVersion 29
+         versionCode 1
+         versionName "1.0"
+         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
++        multiDexEnabled true
+     }
+     buildTypes {
+         release {
+@@ -26,8 +28,8 @@
+ dependencies {
+     implementation fileTree(dir: 'libs', include: ['*.jar'])
+     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+-    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+-    implementation 'com.google.firebase:firebase-auth:19.2.0'
++    implementation 'com.google.firebase:firebase-analytics:21.2.0'
++    implementation 'com.google.firebase:firebase-auth:21.1.0'
+     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+     testImplementation 'junit:junit:4.12'
+     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+@@ -41,11 +43,12 @@
+     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+     implementation 'com.google.zxing:core:3.3.0'
+     implementation 'com.google.android.material:material:1.2.0-alpha04'
+-    implementation 'com.google.firebase:firebase-database:19.2.0'
++    implementation 'com.google.firebase:firebase-database:20.1.0'
+     implementation 'com.jakewharton:butterknife:10.0.0'
+     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+-    implementation 'com.google.firebase:firebase-storage:19.1.1'
++    implementation 'com.google.firebase:firebase-storage:20.1.0'
+     implementation 'com.squareup.picasso:picasso:2.5.2'
++    //implementation 'com.android.support:multidex:1.0.3'
+ 
+ 
+ }
+Index: app/src/main/java/com/example/and1/Fragments/ProfileFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.and1.Fragments;\n\nimport android.content.Context;\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.Button;\nimport android.widget.EditText;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.fragment.app.Fragment;\nimport androidx.fragment.app.FragmentActivity;\nimport androidx.fragment.app.FragmentManager;\nimport androidx.fragment.app.FragmentTransaction;\n\nimport com.example.and1.Activity.MainActivity;\nimport com.example.and1.R;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.database.DataSnapshot;\nimport com.google.firebase.database.DatabaseError;\nimport com.google.firebase.database.DatabaseReference;\nimport com.google.firebase.database.FirebaseDatabase;\nimport com.google.firebase.database.ValueEventListener;\n\npublic class ProfileFragment extends Fragment {\n\n    Button btnLogout, btnBalance;\n    Context context;\n    EditText balance;\n    TextView currentBalance;\n    Button addBalance;\n    private FirebaseAuth mAuth;\n    private FirebaseDatabase mDatabase;\n    private DatabaseReference mDatabaseReference;\n\n    private FragmentActivity myContext;\n    @Nullable\n    @Override\n    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\n\n        final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);\n        context = rootView.getContext();\n\n        btnLogout = rootView.findViewById(R.id.loggout);\n\n       // btnBalance = rootView.findViewById(R.id.balance);\n\n        btnLogout.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                FirebaseAuth.getInstance().signOut();\n                Intent intToMain = new Intent(rootView.getContext(), MainActivity.class);\n                startActivity(intToMain);\n            }\n        });\n\n        balance = rootView.findViewById(R.id.topUpBalance);\n        currentBalance = rootView.findViewById(R.id.currentBalance);\n        addBalance = rootView.findViewById(R.id.addBalance);\n\n        mAuth = FirebaseAuth.getInstance();\n        mDatabase = FirebaseDatabase.getInstance();\n        mDatabaseReference = mDatabase.getReference();\n\n\n\n        String key = mAuth.getCurrentUser().getUid();\n        mDatabaseReference = mDatabase.getReference().child(\"balance\").child(key).child(\"money\");\n        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {\n            @Override\n            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\n                String currentBal = (String) dataSnapshot.getValue().toString();\n                currentBalance.setText(currentBal);\n\n            }\n\n            @Override\n            public void onCancelled(@NonNull DatabaseError databaseError) {\n\n            }\n        });\n        addBalance.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {\n                    @Override\n                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\n                        String currentBal = (String) dataSnapshot.getValue().toString();\n                        double ba = Double.parseDouble(balance.getText().toString());\n                        double add = Double.parseDouble(currentBal);\n                        double newValue = ba + add;\n                        mDatabaseReference.setValue(newValue);\n                        balanceSet();\n                        Toast.makeText(rootView.getContext(), \"You top-up you balance: \" + ba + \" dkk\", Toast.LENGTH_SHORT).show();\n                    }\n\n                    @Override\n                    public void onCancelled(@NonNull DatabaseError databaseError) {\n\n                    }\n                });\n            }\n        });\n\n\n\n        return rootView;\n    }\n\n    @Override\n    public void onStart() {\n        balanceSet();\n        super.onStart();\n\n\n    }\n\n    public void balanceSet(){\n        String key = mAuth.getCurrentUser().getUid();\n        mDatabaseReference = mDatabase.getReference().child(\"balance\").child(key).child(\"money\");\n        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {\n            @Override\n            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\n                String currentBal = (String) dataSnapshot.getValue().toString();\n                currentBalance.setText(currentBal);\n\n            }\n\n            @Override\n            public void onCancelled(@NonNull DatabaseError databaseError) {\n\n            }\n        });\n    }\n\n    @Override\n    public void onAttach(@NonNull Context context) {\n        myContext = (FragmentActivity) context;\n        super.onAttach(context);\n    }\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/and1/Fragments/ProfileFragment.java b/app/src/main/java/com/example/and1/Fragments/ProfileFragment.java
+--- a/app/src/main/java/com/example/and1/Fragments/ProfileFragment.java	(revision f04796c1cea9ac953c4a0609bba344fe5bffe782)
++++ b/app/src/main/java/com/example/and1/Fragments/ProfileFragment.java	(date 1668723033269)
+@@ -3,6 +3,7 @@
+ import android.content.Context;
+ import android.content.Intent;
+ import android.os.Bundle;
++import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+@@ -27,6 +28,8 @@
+ import com.google.firebase.database.FirebaseDatabase;
+ import com.google.firebase.database.ValueEventListener;
+ 
++import java.util.Objects;
++
+ public class ProfileFragment extends Fragment {
+ 
+     Button btnLogout, btnBalance;
+@@ -48,7 +51,7 @@
+ 
+         btnLogout = rootView.findViewById(R.id.loggout);
+ 
+-       // btnBalance = rootView.findViewById(R.id.balance);
++       //btnBalance = rootView.findViewById(R.id.balance);
+ 
+         btnLogout.setOnClickListener(new View.OnClickListener() {
+             @Override
+@@ -74,8 +77,8 @@
+         mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+             @Override
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+-                String currentBal = (String) dataSnapshot.getValue().toString();
+-                currentBalance.setText(currentBal);
++                //String currentBal = (String) dataSnapshot.getValue().toString();
++                //currentBalance.setText(currentBal);
+ 
+             }
+ 
+@@ -90,13 +93,17 @@
+                 mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                     @Override
+                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+-                        String currentBal = (String) dataSnapshot.getValue().toString();
++
++                        Object currentBal = dataSnapshot.getValue();
++
++
+                         double ba = Double.parseDouble(balance.getText().toString());
+-                        double add = Double.parseDouble(currentBal);
++                        double add = Double.parseDouble(currentBal.toString());
+                         double newValue = ba + add;
+                         mDatabaseReference.setValue(newValue);
+                         balanceSet();
+                         Toast.makeText(rootView.getContext(), "You top-up you balance: " + ba + " dkk", Toast.LENGTH_SHORT).show();
++
+                     }
+ 
+                     @Override
+@@ -126,8 +133,9 @@
+         mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+             @Override
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+-                String currentBal = (String) dataSnapshot.getValue().toString();
+-                currentBalance.setText(currentBal);
++                Object currentBal = dataSnapshot.getValue();
++
++                currentBalance.setText(currentBal.toString());
+ 
+             }
+ 
+Index: .idea/runConfigurations.xml
+===================================================================
+diff --git a/.idea/runConfigurations.xml b/.idea/runConfigurations.xml
+deleted file mode 100644
+--- a/.idea/runConfigurations.xml	(revision f04796c1cea9ac953c4a0609bba344fe5bffe782)
++++ /dev/null	(revision f04796c1cea9ac953c4a0609bba344fe5bffe782)
+@@ -1,12 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="RunConfigurationProducerService">
+-    <option name="ignoredProducers">
+-      <set>
+-        <option value="org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer" />
+-        <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer" />
+-        <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer" />
+-      </set>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/jarRepositories.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/jarRepositories.xml b/.idea/jarRepositories.xml
+new file mode 100644
+--- /dev/null	(date 1668713344145)
++++ b/.idea/jarRepositories.xml	(date 1668713344145)
+@@ -0,0 +1,25 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RemoteRepositoriesConfiguration">
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Maven Central repository" />
++      <option name="url" value="https://repo1.maven.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="jboss.community" />
++      <option name="name" value="JBoss Community repository" />
++      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="BintrayJCenter" />
++      <option name="name" value="BintrayJCenter" />
++      <option name="url" value="https://jcenter.bintray.com/" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="Google" />
++      <option name="name" value="Google" />
++      <option name="url" value="https://dl.google.com/dl/android/maven2/" />
++    </remote-repository>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_1_8\" project-jdk-name=\"1.8\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision f04796c1cea9ac953c4a0609bba344fe5bffe782)
++++ b/.idea/misc.xml	(date 1668714322187)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+new file mode 100644
+--- /dev/null	(date 1668713258243)
++++ b/.idea/compiler.xml	(date 1668713258243)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <bytecodeTargetLevel target="11" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1668713168751)
++++ b/.idea/vcs.xml	(date 1668713168751)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"GradleSettings\">\n    <option name=\"linkedExternalProjectsSettings\">\n      <GradleProjectSettings>\n        <compositeConfiguration>\n          <compositeBuild compositeDefinitionSource=\"SCRIPT\" />\n        </compositeConfiguration>\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\n        <option name=\"resolveModulePerSourceSet\" value=\"false\" />\n        <option name=\"testRunner\" value=\"PLATFORM\" />\n      </GradleProjectSettings>\n    </option>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision f04796c1cea9ac953c4a0609bba344fe5bffe782)
++++ b/.idea/gradle.xml	(date 1668713258245)
+@@ -1,15 +1,19 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="GradleMigrationSettings" migrationVersion="1" />
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>
+-        <compositeConfiguration>
+-          <compositeBuild compositeDefinitionSource="SCRIPT" />
+-        </compositeConfiguration>
++        <option name="testRunner" value="GRADLE" />
+         <option name="distributionType" value="DEFAULT_WRAPPED" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-        <option name="resolveModulePerSourceSet" value="false" />
+-        <option name="testRunner" value="PLATFORM" />
++        <option name="gradleJvm" value="Embedded JDK" />
++        <option name="modules">
++          <set>
++            <option value="$PROJECT_DIR$" />
++            <option value="$PROJECT_DIR$/app" />
++          </set>
++        </option>
+       </GradleProjectSettings>
+     </option>
+   </component>
