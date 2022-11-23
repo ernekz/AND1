@@ -35,7 +35,8 @@ public class RecycleViewAdapterHistory extends RecyclerView.Adapter<RecycleViewA
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        //holder.tvPrice.setText(orders.get(position).getTotalPrice());
+        String str = String.valueOf(orders.get(position).getTotalPrice());
+        holder.tvPrice.setText(str);
         //TODO: Fix the parsing and get the orders by current user.
         holder.tvPeriod.setText(orders.get(position).getPeriod());
     }

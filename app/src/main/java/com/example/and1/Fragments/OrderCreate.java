@@ -127,7 +127,7 @@ public class OrderCreate extends Fragment {
                             final Balance bal = dataSnapshot.getValue(Balance.class);
                             if(totalPriceFor<= bal.getmoney()) {
 
-                                mDatabaseReference.child(currentUser).setValue(orderCreated).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                mDatabaseReference.push().setValue(orderCreated).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                       if(task.isSuccessful()) {

@@ -30,6 +30,7 @@ public class Order implements Parcelable {
             this.bikeId = in.readString();
             this.period = in.readString();
             this.totalPrice = in.readDouble();
+            this.userId = in.readString();
     }
 
     public Order(){
@@ -69,6 +70,7 @@ public class Order implements Parcelable {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
 
     @Override
     public String toString() {

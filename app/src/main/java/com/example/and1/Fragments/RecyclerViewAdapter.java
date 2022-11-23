@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,17 +19,21 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
+public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements Filterable {
 
 
     Context context;
     List<Bike> bikes;
+    List<Bike> getBikesFilter;
+
     private static View.OnClickListener mOnItemClickListener;
 
     public RecyclerViewAdapter(Context context, List<Bike> bikes) {
         this.context = context;
         this.bikes = bikes;
+        this.getBikesFilter = bikes;
     }
 
     @NonNull
@@ -55,11 +61,47 @@ public class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapt
 
     @Override
     public int getItemCount() {
+
         return bikes.size();
+
     }
 
     public void setOnItemClickListener(View.OnClickListener itemClickListener){
         mOnItemClickListener = itemClickListener;
+    }
+
+    @Override
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults filterResults = new FilterResults();
+                if(charSequence == null || charSequence.length() == 0){
+                    filterResults.values = getBikesFilter;
+                    filterResults.count = getBikesFilter.size();
+                }else{
+                    String str = charSequence.toString().toLowerCase();
+                    List<Bike> bikeModels = new ArrayList<>();
+                    for(Bike bikeModel: getBikesFilter){
+                        if(bikeModel.getName().toLowerCase().contains(str)|| bikeModel.getType().toLowerCase().contains(str)){
+                            bikeModels.add(bikeModel);
+                        }
+                    }
+                    filterResults.values = bikeModels;
+                    filterResults.count = bikeModels.size();
+                }
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                if(filterResults.values !=null) {
+                    getBikesFilter = (List<Bike>) filterResults.values;
+                    notifyDataSetChanged();
+                }
+            }
+        };
+        return null;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
